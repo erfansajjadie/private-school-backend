@@ -20,8 +20,12 @@ trait Buyer
 
     public function hasPurchasedCourse(int $id): bool
     {
-        return $this->payments()->where('course_id', $id)->exists();
+        return $this->payments()
+            ->where('course_id', $id)
+            ->exists();
     }
+
+
 
     public function private_payments()
     {

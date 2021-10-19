@@ -58,6 +58,7 @@ class User extends Authenticatable
         'email',
         'sheba',
         'is_private',
+        'private_price',
         'phone',
         'phone_verified',
         'profile_image',

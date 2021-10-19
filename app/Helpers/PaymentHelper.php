@@ -25,7 +25,7 @@ class PaymentHelper
         $invoice->detail('wages', [
             [
                 "iban" => $course->user->sheba,
-                "amount" => (int) ($course->price() * 0.782),
+                "amount" => (int) (($course->price() * 0.782)) * 10,
                 "description" => "تسهیم سود فروش از محصول به ". $seller->name
             ]
         ]);
@@ -83,7 +83,13 @@ class PaymentHelper
     public static function invoicePrivate(User $user) : string
     {
         $invoice = (new Invoice)->amount((int) $user->private_price);
-
+        $invoice->detail('wages', [
+            [
+                "iban" => $user->sheba,
+                "amount" => (int) (($user->private_price * 0.782)) * 10,
+                "description" => "تسهیم سود فروش از محصول به ". $user->fullname
+            ]
+        ]);
         try {
             $link =  Payment::callbackUrl(env('APP_URL'). '/private-payment-complete')
                 ->purchase(
