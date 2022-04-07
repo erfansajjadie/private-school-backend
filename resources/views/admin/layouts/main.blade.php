@@ -108,6 +108,7 @@
 <script src="{{asset('vendors/jqvmap/dist/jquery.vmap.js')}}"></script>
 <script src="{{asset('vendors/jqvmap/dist/maps/jquery.vmap.world.js')}}"></script>
 <script src="{{asset('vendors/jqvmap/examples/js/jquery.vmap.sampledata.js')}}"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Custom Theme Scripts -->
 <script src="{{asset('js/custom.min.js')}}"></script>

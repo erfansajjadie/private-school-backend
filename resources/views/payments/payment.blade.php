@@ -41,7 +41,11 @@
         </tr>
     </table>
     <div style="height: 50px"></div>
-    <a class="link" href="{{ "private-school://private-school.ir?Authority=" . $payment["id"] . "&Status=success" }}" >برگشت به اپلیکیشن</a>
+    @if($payment->platform === 'web')
+        <a class="link" href="{{ route('user-payments') }}" >رفتن به پنل کاربری</a>
+    @else
+        <a class="link" href="{{ "private-school://private-school.ir?Authority=" . $payment["id"] . "&Status=success" }}" >برگشت به اپلیکیشن</a>
+    @endif
     <div style="height: 60px"></div>
     <img  src="{{ asset('img/logo.png') }}"  alt="">
 </div>

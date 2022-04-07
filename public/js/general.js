@@ -4,6 +4,51 @@ function number_3_3 (num, sep){
     return number.replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1"+separator);
 }
 
+
+function deleteItem(route) {
+    Swal.fire({
+        title: 'آیا از حذف این آیتم اطمینان دارید؟',
+        showCancelButton: true,
+        confirmButtonText: 'بله',
+        cancelButtonText: 'خیر',
+        showLoaderOnConfirm: true,
+        preConfirm: (login) => {
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            return fetch(route, {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-Token": CSRF_TOKEN
+                    },
+                }
+            )
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText)
+                    }
+                    return response.json()
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(
+                        `Request failed: ${error}`
+                    )
+                })
+        },
+        allowOutsideClick: () => !Swal.isLoading()
+    }).then((result) => {
+        Swal.fire({
+            icon: 'success',
+            title: result.value.message,
+        })
+        location.reload();
+
+    })
+}
+
+
+
 jQuery(function($){
 
     if($('#login-form').length){
@@ -334,7 +379,7 @@ jQuery(function($){
             let searched_text = that.val();
             that.addClass('loading');
             $.ajax({
-                url: "/course/search/" + searched_text,
+                url: "/search/" + searched_text,
                 method: 'GET',
                 success:function (data) {
                     that.removeClass('loading');
@@ -370,113 +415,80 @@ jQuery(function($){
         $(this).toggleClass('active');
         $('.comments .list').slideToggle();
     });
-    $('#lost_email').on('keyup keydown change', function () {
-        $('#lost_mobile').val('');
-        $('#lost-form').attr('action','/user/auth/password/email');
-        $('#lost-form').attr('action-type','send_mail');
-    });
-    $('#lost_mobile').on('keyup keydown change', function () {
-        $('#lost_email').val('');
-        $('#lost-form').attr('action','/user/auth/password/mobile');
-        $('#lost-form').attr('action-type','send_mobile');
-    });
+
+
 
     $('.js-reset-pass').click(function () {
         let btn = $(this);
         let action_type = $("#lost-form").attr('action-type');
         let form_data = new FormData();
-        if(action_type == 'send_mail')
-        {
-            btn.addClass('loading');
-            form_data.append('email',$('#lost_email').val());
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': btn.attr('data-token')
-                }
-            });
-            $.ajax({
-                url: $('#lost-form').attr('action'),
-                method: 'POST',
-                processData: false, // Don't process the files
-                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                data: form_data,
-                success: function (data) {
-                    btn.removeClass('loading');
-                    swal({
-                        title: 'موفقیت',
-                        icon: 'success',
-                        text: 'ایمیلی جهت بازیابی رمز عبور برای شما ارسال گردید. لطفا ایمیل خود را به همراه پوشه SPAM چک بفرمایید.'
-                    })
-                },
-            });
-        }
-        else if(action_type == 'send_mobile')
-        {
-            btn.addClass('loading');
-            form_data.append('phone',$("#lost_mobile").val());
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': btn.attr('data-token')
-                }
-            });
-            $.ajax({
-                url: $('#lost-form').attr('action'),
-                method: 'POST',
-                processData: false, // Don't process the files
-                contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                data: form_data,
-                success: function (data) {
-                    btn.removeClass('loading');
-                    if(data.status == 'success')
-                    {
-                        $('<input>').attr({
-                            type: 'hidden',
-                            name: 'activation_mobile',
-                            id: 'activation_mobile',
-                            value: $("#lost_mobile").val()
-                        }).appendTo('#mobile-recovery-form');
-
-                        $('#modalLogin').modal('hide');
-                        $('#modalActivation').modal('show');
-                    }
-                    else
-                    {
-                        swal({
-                            title: 'هشدار',
-                            icon: 'warning',
-                            text: data.message.join()
-                        });
-                    }
-                },
-            });
-        }
-    });
-    $('.js-confirm-activation-code').click(function () {
-        let form_data = new FormData();
-        let btn = $(this);
-        form_data.append('activation_mobile',$('#activation_mobile').val());
-        form_data.append('activation_code',$('#activation_code').val());
         btn.addClass('loading');
+        form_data.append('phone',$("#lost_mobile").val());
         $.ajaxSetup({
             headers: {
-                'X-CSRF-TOKEN': btn.attr('data-token')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
         $.ajax({
-            url: '/user/auth/password/mobile/reset/confirm',
+            url: $('#lost-form').attr('action'),
             method: 'POST',
             processData: false, // Don't process the files
             contentType: false, // Set content type to false as jQuery will tell the server its a query string request
             data: form_data,
             success: function (data) {
                 btn.removeClass('loading');
-                if(data.status == 'success')
+                if(data.success)
                 {
-                    $(location).attr('href', '/user/auth/password/mobile/reset/' + $('#activation_mobile').val());
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'activation_mobile',
+                        id: 'activation_mobile',
+                        value: $("#lost_mobile").val()
+                    }).appendTo('#mobile-recovery-form');
+
+                    $("#activation_code").attr("placeholder", "کد ارسال شده به " + $("#lost_mobile").val() + "وارد کنید").val("").focus().blur();
+
+
+                    $('#modalLogin').modal('hide');
+                    $('#modalActivation').modal('show');
                 }
                 else
                 {
-                    swal({
+                    new Swal({
+                        title: 'هشدار',
+                        icon: 'warning',
+                        text: data.message
+                    });
+                }
+            },
+        });
+    });
+    $('.js-confirm-activation-code').click(function () {
+        let form_data = new FormData();
+        let btn = $(this);
+        form_data.append('phone',$('#activation_mobile').val());
+        form_data.append('otp',$('#activation_code').val());
+        btn.addClass('loading');
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: $('#mobile-recovery-form').attr('action'),
+            method: 'POST',
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            data: form_data,
+            success: function (data) {
+                btn.removeClass('loading');
+                if(data.success)
+                {
+                    $(location).attr('href', '/profile/update');
+                }
+                else
+                {
+                    new Swal({
                         title: 'هشدار',
                         icon: 'warning',
                         text: data.message.join()

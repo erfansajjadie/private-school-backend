@@ -20,4 +20,22 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function status()
+    {
+        if($this->status === 0) {
+            return 'در انتظار پرداخت';
+        }
+
+        if($this->status === 1) {
+            return 'پرداخت شده';
+        }
+
+        return 'لغو شده';
+    }
 }

@@ -49,6 +49,12 @@ class AuthController extends Controller
         ];
     }
 
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('home');
+    }
+
     public function verifyOtp(VerifyOtpRequest $request)
     {
         $items = $request->validated();

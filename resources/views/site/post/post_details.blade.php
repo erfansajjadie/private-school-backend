@@ -1,14 +1,13 @@
 @extends('layouts.app', ['body_class' => 'inner-page'])
-@section('title', $course->name)
+@section('title', $post->title)
 @section('content')
-<div class="scroll-footer">
     <div class="header-page">
         <div class="container">
             <nav class="breadcrumbs">
                 <a href="{{route('home')}}">خانه</a>
-                <a href="{{route('courses-list')}}">دوره‌های آموزشی</a>
+                <a href="{{route('posts-list')}}">مطالب کاربران</a>
                 <span>
-                    {{$course->name}}
+                    {{$post->title}}
                 </span>
             </nav>
 
@@ -17,36 +16,31 @@
     <section>
         <div class="container">
             <div class="post-course">
-                <h1 class="main-title">{{$course->name}}</h1>
+                <h1 class="main-title">{{$post->title}}</h1>
                 <div class="row">
                     <div class="col-lg-8 my-5">
                         <div class="images">
-                            <button class="btn favorite js-login" data-toggle="tooltip" data-placement="top"
-                                    title="افزودن به نشان شده‌ها">
-                                <i class="far fa-heart"></i>
-                            </button>
+                            @auth
+                                <form action="{{route('like', $post->id)}}" method="get">
+                                    <button class="btn favorite" data-toggle="tooltip" data-placement="top"
+                                        title="لایک کردن">
+                                        @if (Auth::user()->hasLiked($post))
+                                            <i class="fa fa-fw fa-heart"></i>
+                                        @else
+                                            <i class="far fa-heart"></i>
+                                        @endif
+                                    </button>
+                                </form>
+                            @endauth
                             <div class="owl-carousel owl-single main">
-                                <div class="item"><img src="{{asset('storage/'. $course->image)}}"></div>
+                                @foreach($post->images as $image)
+                                    <div class="item"><img src="{{asset('storage/'. $image->image)}}"></div>
+                                @endforeach
                             </div>
                         </div>
                         <div class="content">
-                            <h3>معرفی دوره</h3>
-                            <div><p>{{$course->description}}</p></div>
-                            <h3>سرفصل های دوره</h3>
-
-                            <ul class="list-group">
-                                @foreach($course->topics as $topic)
-                                    <li class="list-group-item">
-                                        <h4>
-                                            <span class="badge badge-primary ml-2">{{$loop->index + 1}}</span>
-                                            <strong>{{$topic->title}}</strong>
-                                            <i class="fa fa-fw fa-lock float-left"></i>
-                                        </h4>
-                                    </li>
-                                @endforeach
-                            </ul>
-
-
+                            <h3>متن مطلب</h3>
+                            <div><p>{{$post->description}}</p></div>
                         </div>
                         {{--<div class="comments">
                             <div class="title"><i class="far fa-comment-dots"></i> دیدگاه</div>
@@ -114,50 +108,36 @@
                                 <div class="inner">
                                     <div class="btn btn-light btn-block btn-lg btn-title" data-toggle="collapse"
                                          data-target="#collapse-0">
-                                        جزئیات دوره
+                                        جزئیات مطلب
                                     </div>
                                     <div id="collapse-0" class="collapse"
                                          data-parent="#accordionCalendar">
                                         <div class="detail">
                                             <div class="item">
-                                                <i class="fa fa-fw fa-money-bill"></i>
-                                                <div class="key">قیمت دوره</div>
+                                                <i class="fa fa-fw fa-calendar-alt"></i>
+                                                <div class="key">تاریخ انتشار</div>
                                                 <div class="value">
-                                                    <span class="format-number">{{$course->price()}}</span> تومان
-                                                    @if($course->discount !== 0)
-                                                        <del class="text-muted text-sm-left  format-number">{{$course->price}}</del>
-                                                    @endif
+                                                    <span class="value">{{$post->date()}}</span>
                                                 </div>
                                             </div>
                                             <div class="item">
-                                                <i class="fas fa-history"></i>
-                                                <div class="key">تعداد جلسات</div>
-                                                <div class="value">{{$course->topics()->count()}}</div>
+                                                <i class="fa fa-fw fa-heart"></i>
+                                                <div class="key">تعداد لایک</div>
+                                                <div class="value format-number">{{$post->likes_count}}</div>
                                             </div>
                                             <div class="item">
                                                 <i class="fas fa-chalkboard-teacher"></i>
-                                                <div class="key">استاد</div>
+                                                <div class="key">نویسنده مطلب</div>
                                                 <div class="owl-carousel owl-single teachers">
                                                     <div class="box">
-                                                        <a href="{{route('user-details', $course->user->id)}}"
-                                                           style="background-image:url({{asset('storage/'. $course->user->profile_image)}});"
+                                                        <a href="{{route('user-details', $post->user->id)}}"
+                                                           style="background-image:url({{asset('storage/'. $post->user->profile_image)}});"
                                                            class="thumb"></a>
                                                         <h5>
-                                                            <a href="{{route('user-details', $course->user->id)}}">{{$course->user->user_name}}</a>
+                                                            <a href="{{route('user-details', $post->user->id)}}">{{$post->user->user_name}}</a>
                                                         </h5>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="discount">
-                                                <form METHOD="GET"
-                                                      action="https://marketingschool.ir/user/buy/pre-factor/6">
-                                                    <div class="bottom-fixed">
-                                                        <button type="button"
-                                                                class="btn btn-lg btn-block btn-primary">
-                                                           خریده دوره
-                                                        </button>
-                                                    </div>
-                                                </form>
                                             </div>
                                         </div>
                                     </div>
@@ -169,5 +149,4 @@
             </div>
         </div>
     </section>
-</div>
 @endsection

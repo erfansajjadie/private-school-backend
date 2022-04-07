@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\v1;
+namespace App\Http\Requests\Site;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,27 +26,15 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'sometimes|required',
-            'last_name' => 'sometimes|required',
-            'profile_image' => 'sometimes|required|image',
-            'user_name' => 'sometimes|required|unique:users',
-            'phone' => 'sometimes|required|iran_mobile|unique:users',
-            'sheba' => 'sometimes|required',
-            'is_private' => 'sometimes|required|integer|between:0,1',
-            'private_price' => 'sometimes|required|integer',
-            'category_id' => 'sometimes|required|integer|exists:categories,id',
+            'first_name' => 'nullable',
+            'last_name' => 'nullable',
+            'profile_image' => 'image',
+            'user_name' => 'required|string',
+            'sheba' => 'nullable',
+            'is_private' => 'required|integer|between:0,1',
+            'private_price' => 'integer',
+            'category_id' => 'nullable',
         ];
     }
 
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors()->first();
-
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'message' => $errors,
-            ], 400)
-        );
-    }
 }

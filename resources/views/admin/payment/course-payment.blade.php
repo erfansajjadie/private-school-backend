@@ -10,9 +10,9 @@
                 <div class="">
                     <div class="page-title">
                         <div class="title_left">
-                            <h3>کاربران
-                                <small>لیست تمام کاربران</small>
-                                {{$users->count()}}
+                            <h3>لیست خریدها
+                                <small>لیست خرید دوره ها</small>
+                                {{$payments->count()}}
                             </h3>
                         </div>
 
@@ -68,44 +68,39 @@
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
                                                             aria-label="نام: activate to sort column descending"
-                                                            style="width: 50px;">شناسه
+                                                            style="width: 50px;">شناسه تراکنش
                                                         </th>
                                                         <th class="sorting_asc" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
                                                             aria-label="نام: activate to sort column descending"
-                                                            style="width: 50px;">عکس
+                                                            style="width: 50px;">دوره
                                                         </th>
                                                         <th class="sorting_asc" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
                                                             aria-label="نام: activate to sort column descending"
-                                                            style="width: 70px;">نام کاربری
+                                                            style="width: 70px;">نام خریدار
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="جایگاه: activate to sort column ascending"
-                                                            style="width: 65px;"> نام و نام خانوادگی
+                                                            style="width: 65px;"> نام فروشنده
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="اداره: activate to sort column ascending"
-                                                            style="width: 65px;">شماره موبایل
+                                                            style="width: 65px;">قیمت
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="سن: activate to sort column ascending"
-                                                            style="width: 265px;">شماره شبا
+                                                            style="width: 50px;">تخفیف
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="تاریخ شروع: activate to sort column ascending"
-                                                            style="width: 30px;">نوع صفحه
-                                                        </th>
-                                                        <th class="sorting" tabindex="0"
-                                                            aria-controls="datatable-checkbox" rowspan="1" colspan="1"
-                                                            aria-label="تاریخ شروع: activate to sort column ascending"
-                                                            style="width: 120px;">عملیات
+                                                            style="width: 30px;">وضعیت
                                                         </th>
                                                     </tr>
                                                     </thead>
@@ -113,27 +108,22 @@
 
                                                     <tbody>
 
-                                                        @foreach($users as $user)
+                                                        @foreach($payments as $payment)
                                                             <tr role="row" class="odd">
-                                                                <td>{{$user->id}}</td>
+                                                                <td>{{$payment->transaction_id}}</td>
+                                                                <td>{{$payment->course->name}}</td>
+                                                                <td>{{$payment->user->user_name}}</td>
+                                                                <td>{{$payment->owner->user_name}}</td>
+                                                                <td>{{\App\Helpers\Utils::format_price($payment->price)}}</td>
+                                                                <td>{{\App\Helpers\Utils::format_price($payment->discount)}}</td>
                                                                 <td>
-                                                                    <a href="{{asset('storage/'. $user->profile_image)}}" target="_blank">
-                                                                        <img class = 'img-rounded' src="{{asset('storage/'. $user->profile_image)}}" alt="No" height="70" />
-                                                                    </a>
-                                                                </td>
-                                                                <td>{{$user->user_name}}</td>
-                                                                <td>{{$user->fullname}}</td>
-                                                                <td>{{$user->phone}}</td>
-                                                                <td>{{$user->sheba}}</td>
-                                                                <td><span class="badge badge-secondary">{{$user->is_private ? "شخصی" : "عمومی"}}</span></td>
-                                                                <td>
-                                                                    <button onclick="ban({{$user->id}})" class="btn btn-default">
-                                                                        @if($user->is_banned === 1)
-                                                                            <span>رفع مسدودی</span>
-                                                                        @else
-                                                                            <span>مسدود کردن</span>
-                                                                        @endif
-                                                                    </button>
+                                                                    @if($payment->status === 1)
+                                                                        <span class="badge" style="background: green">{{$payment->status()}}</span>
+                                                                    @elseif($payment->status === 0)
+                                                                        <span class="badge badge-secondary">{{$payment->status()}}</span>
+                                                                    @else
+                                                                        <span class="badge badge-danger" style="background: red">{{$payment->status()}}</span>
+                                                                    @endif
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -144,7 +134,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-7">
-                                                {{ $users->links('vendor.pagination.default') }}
+                                                {{ $payments->links('vendor.pagination.default') }}
                                             </div>
                                         </div>
                                     </div>

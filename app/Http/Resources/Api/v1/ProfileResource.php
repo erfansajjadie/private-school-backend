@@ -30,6 +30,7 @@ class ProfileResource extends JsonResource
             'sheba' => $this->sheba,
             'is_private' => !$is_owner && $this->is_private === 1 && !Auth::user()->hasPurchasedPrivate($this->id),
             'private_price' => Utils::format_price($this->private_price),
+            'private' => $this->is_private === 1,
             'is_private_purchased' => Auth::user()->hasPurchasedPrivate($this->id),
             'followers_count' => $this->followers()->count(),
             'following_count' => $this->followings()->count(),

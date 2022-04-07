@@ -10,9 +10,9 @@
                 <div class="">
                     <div class="page-title">
                         <div class="title_left">
-                            <h3>محصولات
-                                <small>لیست تمام محصولات</small>
-                                {{$products->count( )}}
+                            <h3>کاربران
+                                <small>لیست تمام کاربران</small>
+                                {{$users->count()}}
                             </h3>
                         </div>
 
@@ -37,13 +37,9 @@
 
                                 <div class="x_content">
 
-                                    <p>با افزودن کلاس <code dir="ltr">bulk_action</code> برای جدول، جدول دارای اعمال
-                                        همگانی می‌شود.</p>
-
-
                                     <div id="datatable-checkbox_wrapper"
                                          class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                        <div class="row">
+                                        {{--<div class="row">
                                             <div class="col-sm-6">
                                                 <div class="dataTables_length" id="datatable-checkbox_length"><label>نمایش
                                                         <select name="datatable-checkbox_length"
@@ -57,10 +53,10 @@
                                             </div>
                                             <div class="col-sm-6">
                                                 <div id="datatable-checkbox_filter" class="dataTables_filter">
-                                                    <a href="{{route('product.create')}}" type="button" class="btn btn-round btn-primary">ایجاد محصول جدید +</a>
+--}}{{--                                                    <a href="{{route('product.create')}}" type="button" class="btn btn-round btn-primary">ایجاد محصول جدید +</a>--}}{{--
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>--}}
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <table id="datatable-checkbox"
@@ -68,10 +64,12 @@
                                                        role="grid" aria-describedby="datatable-checkbox_info">
                                                     <thead>
                                                     <tr role="row">
-                                                        <th class="sorting_disabled" rowspan="1" colspan="1"
-                                                            aria-label="" style="width: 20px;"><input type="checkbox"
-                                                                                                      id="check-all"
-                                                                                                      class="flat"></th>
+                                                        <th class="sorting_asc" tabindex="0"
+                                                            aria-controls="datatable-checkbox" rowspan="1" colspan="1"
+                                                            aria-sort="ascending"
+                                                            aria-label="نام: activate to sort column descending"
+                                                            style="width: 50px;">شناسه
+                                                        </th>
                                                         <th class="sorting_asc" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
@@ -82,27 +80,27 @@
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
                                                             aria-label="نام: activate to sort column descending"
-                                                            style="width: 270px;">نام محصول
+                                                            style="width: 70px;">نام کاربری
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="جایگاه: activate to sort column ascending"
-                                                            style="width: 65px;"> شناسه
+                                                            style="width: 65px;"> نام و نام خانوادگی
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="اداره: activate to sort column ascending"
-                                                            style="width: 65px;">قیمت
+                                                            style="width: 65px;">شماره موبایل
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="سن: activate to sort column ascending"
-                                                            style="width: 65px;">قیمت با تخفیف
+                                                            style="width: 265px;">شماره شبا
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-label="تاریخ شروع: activate to sort column ascending"
-                                                            style="width: 30px;">موجودی
+                                                            style="width: 30px;">نوع صفحه
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
@@ -115,34 +113,27 @@
 
                                                     <tbody>
 
-                                                        @foreach($products as $product)
+                                                        @foreach($users as $user)
                                                             <tr role="row" class="odd">
+                                                                <td>{{$user->id}}</td>
                                                                 <td>
-                                                                    <div class="icheckbox_flat-green"
-                                                                         style="position: relative;"><input type="checkbox"
-                                                                                                            class="flat"
-                                                                                                            name="table_records"
-                                                                                                            style="position: absolute; opacity: 0;">
-                                                                        <ins class="iCheck-helper"
-                                                                             style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <a href="{{$product->image}}" target="_blank">
-                                                                        <img class = 'img-rounded' src="{{$product->image}}" alt="No" height="70" />
+                                                                    <a href="{{asset('storage/'. $user->profile_image)}}" target="_blank">
+                                                                        <img class = 'img-rounded' src="{{asset('storage/'. $user->profile_image)}}" alt="No" height="70" />
                                                                     </a>
                                                                 </td>
-                                                                <td>{{$product->name}}</td>
-                                                                <td>{{$product->sku}}</td>
-                                                                <td>{{$product->price}}</td>
-                                                                <td>{{$product->special_price}}</td>
-                                                                <td>{{$product->quantity}}</td>
+                                                                <td>{{$user->user_name}}</td>
+                                                                <td>{{$user->fullname}}</td>
+                                                                <td>{{$user->phone}}</td>
+                                                                <td>{{$user->sheba}}</td>
+                                                                <td><span class="badge badge-secondary">{{$user->is_private ? "شخصی" : "عمومی"}}</span></td>
                                                                 <td>
-                                                                    <div class = 'row text-center'>
-                                                                        <span class = 'fa fa-trash operation-icon'></span>
-                                                                        <span class = 'fa fa-edit operation-icon'></span>
-                                                                        <span class = 'fa fa-list operation-icon'></span>
-                                                                    </div>
+                                                                    <button onclick="ban({{$user->id}})" class="btn btn-default">
+                                                                        @if($user->is_banned === 1)
+                                                                            <span>رفع مسدودی</span>
+                                                                        @else
+                                                                            <span>مسدود کردن</span>
+                                                                        @endif
+                                                                    </button>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -152,50 +143,8 @@
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-sm-5">
-                                                <div class="dataTables_info" id="datatable-checkbox_info" role="status"
-                                                     aria-live="polite">Showing 1 to 10 of 57 entries
-                                                </div>
-                                            </div>
                                             <div class="col-sm-7">
-                                                <div class="dataTables_paginate paging_simple_numbers"
-                                                     id="datatable-checkbox_paginate">
-                                                    <ul class="pagination">
-                                                        <li class="paginate_button previous disabled"
-                                                            id="datatable-checkbox_previous"><a href="#"
-                                                                                                aria-controls="datatable-checkbox"
-                                                                                                data-dt-idx="0"
-                                                                                                tabindex="0">Previous</a>
-                                                        </li>
-                                                        <li class="paginate_button active"><a href="#"
-                                                                                              aria-controls="datatable-checkbox"
-                                                                                              data-dt-idx="1"
-                                                                                              tabindex="0">1</a></li>
-                                                        <li class="paginate_button "><a href="#"
-                                                                                        aria-controls="datatable-checkbox"
-                                                                                        data-dt-idx="2"
-                                                                                        tabindex="0">2</a></li>
-                                                        <li class="paginate_button "><a href="#"
-                                                                                        aria-controls="datatable-checkbox"
-                                                                                        data-dt-idx="3"
-                                                                                        tabindex="0">3</a></li>
-                                                        <li class="paginate_button "><a href="#"
-                                                                                        aria-controls="datatable-checkbox"
-                                                                                        data-dt-idx="4"
-                                                                                        tabindex="0">4</a></li>
-                                                        <li class="paginate_button "><a href="#"
-                                                                                        aria-controls="datatable-checkbox"
-                                                                                        data-dt-idx="5"
-                                                                                        tabindex="0">5</a></li>
-                                                        <li class="paginate_button "><a href="#"
-                                                                                        aria-controls="datatable-checkbox"
-                                                                                        data-dt-idx="6"
-                                                                                        tabindex="0">6</a></li>
-                                                        <li class="paginate_button next" id="datatable-checkbox_next"><a
-                                                                href="#" aria-controls="datatable-checkbox"
-                                                                data-dt-idx="7" tabindex="0">Next</a></li>
-                                                    </ul>
-                                                </div>
+                                                {{ $users->links('vendor.pagination.default') }}
                                             </div>
                                         </div>
                                     </div>
@@ -210,3 +159,51 @@
     </div>
     </body>
 @endsection
+@push('scripts')
+
+    <script type="text/javascript">
+        function ban(id, approve = 1) {
+            Swal.fire({
+                title: 'آیا از انجام این عملیات اطمینان دارید؟',
+                showCancelButton: true,
+                confirmButtonText: 'بله',
+                cancelButtonText: 'خیر',
+                showLoaderOnConfirm: true,
+                preConfirm: (login) => {
+                    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+
+                    return fetch('{{url('admin/ban')}}/' + id, {
+                            method: 'POST',
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json",
+                                "X-Requested-With": "XMLHttpRequest",
+                                "X-CSRF-Token": $('input[name="_token"]').val()
+                            },
+                        }
+                    )
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(response.statusText)
+                            }
+                            return response.json()
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                Swal.fire({
+                    icon: 'success',
+                    title: result.value.message,
+                })
+                location.reload();
+
+            })
+        }
+
+    </script>
+@endpush

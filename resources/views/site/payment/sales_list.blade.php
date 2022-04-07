@@ -1,52 +1,52 @@
 @extends('layouts.app', ['body_class' => 'inner-page'])
-@section('title', 'لیست مطالب کاربران')
+@section('title', 'لیست فروش های کاربر')
 @section('content')
     <div class="header-page">
         <div class="container">
             <nav class="breadcrumbs">
                 <a href="{{route('home')}}">خانه</a>
                 <span>
-                    مطالب کاربران
+                    فروش های شما
                 </span>
             </nav>
 
         </div>
     </div>
-    <div class="container">
-        <div class="row isotope" id="products_section">
-            @foreach($posts as $post)
-                <div class="col-md-4 col-sm-6 element-item bz-5" style="position: absolute; right: 0px; top: 0px;">
-                    <div class="item-video">
-                        <div class="thumb"
-                             style="background-image:url({{$post->thumbnail()}});">
-                            <div class="teachers">
-                                <div class="owl-carousel owl-single">
-                                    <div class="item">
-                                        <a class="picture" href="{{route('user-details', $post->user->id)}}"
-                                           style="background-image:url({{asset('storage/' . $post->user->profile_image)}});"></a>
-                                        <a class="name" href="{{route('user-details', $post->user->id)}}">{{$post->user->user_name}}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-3">
-                            <h5 class="title">
-                                <a href="{{route('post-details', $post->id)}}">{{$post->title}}</a>
-                            </h5>
-                            <div class="subtitle">
-                                <i class="fas fa-fw fa-user-circle"></i>
-                                <a href="{{route('user-details', $post->user->id)}}">{{$post->user->user_name}}</a>
-                            </div>
-                            <div class="detail">
-                                <div>
-                                    <i class="fas fa-fw fa-calendar ml-1"></i>
-                                    {{$post->date()}}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+    <section>
+        <div class="container">
+            <table class="table table-striped mt-3 table-responsive-sm">
+                <thead>
+                <tr>
+                    <th scope="col">شناسه تراکنش</th>
+                    <th scope="col">دوره</th>
+                    <th scope="col">نام خریدار</th>
+                    <th scope="col">قیمت</th>
+                    <th scope="col">تخفیف</th>
+                    <th scope="col">وضعیت</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($payments as $payment)
+                    <tr >
+                        <td>{{$payment->transaction_id}}</td>
+                        <td>{{$payment->course->name}}</td>
+                        <td>{{$payment->user->user_name}}</td>
+                        <td class = 'format-number'>{{$payment->price}}</td>
+                        <td class = 'format-number'>{{$payment->discount}}</td>
+                        <td>
+                            @if($payment->status === 1)
+                                <span class="badge badge-success">{{$payment->status()}}</span>
+                            @elseif($payment->status === 0)
+                                <span class="badge badge-secondary">{{$payment->status()}}</span>
+                            @else
+                                <span class="badge badge-danger">{{$payment->status()}}</span>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
         </div>
-    </div>
+    </section>
 @endsection
+

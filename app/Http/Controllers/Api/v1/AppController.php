@@ -20,9 +20,9 @@ class AppController extends Controller
 {
     public function searchUsers(Request $request)
     {
-        $users = User::where('id', 1);
-        $courses = Course::where('id', 2);
-        if($request->has('keyword')) {
+        $users = User::orderBy('id', 'desc')->take(5);
+        $courses = Course::orderBy('id', 'desc')->take(5);
+        if($request->keyword != null) {
             $users = User::where('first_name', 'LIKE' , '%' . $request->keyword . '%')
                 ->orWhere('last_name', 'LIKE' , '%' . $request->keyword . '%')
                 ->orWhere('user_name', 'LIKE' , '%' . $request->keyword . '%')

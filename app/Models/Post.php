@@ -22,5 +22,20 @@ class Post extends Model
         return $this->hasMany(Like::class);
     }
 
+    public function date()
+    {
+        return (verta($this->created_at))->format('Y/m/j H:i');
+    }
+
+    public function thumbnail()
+    {
+        return asset('storage/' . $this->images()->first()->image);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
 }

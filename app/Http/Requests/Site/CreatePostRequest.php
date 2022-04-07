@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\v1;
+namespace App\Http\Requests\Site;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -31,18 +31,5 @@ class CreatePostRequest extends FormRequest
             'images' => 'required|array',
             'images.*' => 'required|image',
         ];
-    }
-
-
-    protected function failedValidation(Validator $validator)
-    {
-        $errors = $validator->errors()->first();
-
-        throw new HttpResponseException(
-            response()->json([
-                'success' => false,
-                'message' => $errors,
-            ], 400)
-        );
     }
 }

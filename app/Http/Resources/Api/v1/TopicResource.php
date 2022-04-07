@@ -20,7 +20,7 @@ class TopicResource extends JsonResource
             'approved' => $this->approved === 1,
             'title' => $this->title,
             'file' => $this->when(
-                Auth::user()->hasPurchasedCourse($this->course_id) || Auth::user()->id === $this->course->user->id,
+                Auth::user()->hasPurchasedCourse($this->course_id) || Auth::user()->id === $this->course->user->id || $this->course->price() === 0,
                 asset('storage/' . $this->file)
             ),
             'type' => pathinfo(asset("storage/" . $this->file))['extension'] ?? ''

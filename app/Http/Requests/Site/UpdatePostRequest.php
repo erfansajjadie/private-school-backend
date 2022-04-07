@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CreatePostRequest extends FormRequest
+class UpdatePostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class CreatePostRequest extends FormRequest
         return [
             'title' => 'required|string',
             'description' => 'nullable|string',
-            'images' => 'required|array',
+            'images' => 'nullable|array',
             'images.*' => 'required|image',
         ];
     }

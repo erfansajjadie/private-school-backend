@@ -33,7 +33,7 @@ class ProfileRequest extends FormRequest
             'phone' => 'sometimes|required|iran_mobile|unique:users',
             'sheba' => 'sometimes|required',
             'is_private' => 'sometimes|required|integer|between:0,1',
-            'private_price' => 'sometimes|required|integer|min:1000',
+            'private_price' => 'sometimes|required|integer',
             'category_id' => 'sometimes|required|integer|exists:categories,id',
         ];
     }

@@ -2,84 +2,71 @@
 
 namespace App\Http\Controllers\Site;
 
+use App\Helpers\UploadFileHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Site\CreateTopicRequest;
+use App\Http\Requests\Site\UpdateTopicRequest;
+use App\Models\Course;
+use App\Models\CourseTopic;
 use Illuminate\Http\Request;
 
 class TopicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+
+    public function create($id)
     {
-        //
+        $course = Course::findOrFail($id);
+        return view('site.topic.create_topic', compact('course'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+
+    public function store(CreateTopicRequest $request, $id)
     {
-        //
+        $items = $request->validated();
+        $items['file'] = UploadFileHelper::upload($items['file'], 'course_files');
+        $course = Course::findOrFail($id);
+        $course->topics()->save(new CourseTopic($items));
+
+        $request->session()->flash('alert-success', 'جلسه با موفقیت ایجاد شد');
+
+        return redirect()->route('user-courses');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $topic = CourseTopic::findOrFail($id);
+        return view('site.topic.edit_topic', compact('topic'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+
+    public function update(UpdateTopicRequest $request, $id)
     {
-        //
+        $items = $request->validated();
+        $topic = CourseTopic::findOrFail($id);
+
+       
+        $topic->update($items);
+
+        $request->session()->flash('alert-success', 'جلسه با موفقیت ویرایش شد');
+
+        return redirect()->route('user-courses');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
-        //
+        $topic = CourseTopic::findOrFail($id);
+
+        UploadFileHelper::delete($topic->file);
+
+        $topic->delete();
+
+        return [
+            'success' => true,
+            'message' => 'جلسه با موفقیت حذف شد'
+        ];
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Admin;
+namespace App\Http\Requests\Site;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CreateCourseRequest extends FormRequest
+class CreateTopicRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,8 @@ class CreateCourseRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string',
-            'description' => 'nullable|string',
-            'price' => 'required|integer',
-            'discount' => 'integer',
-            'image' => 'required|image',
+            'title' => 'required|string',
+            'file' => 'required|file',
         ];
     }
 }

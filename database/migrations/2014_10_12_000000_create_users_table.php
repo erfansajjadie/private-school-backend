@@ -27,7 +27,8 @@ class CreateUsersTable extends Migration
             $table->boolean('is_private')->default(0);
             $table->bigInteger('private_price')->default(0);
             $table->boolean('phone_verified')->default(0);
-            $table->foreignId('category_id')->nullable()->constrained();
+            $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
+            $table->boolean('is_banned')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });

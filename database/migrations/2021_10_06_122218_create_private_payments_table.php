@@ -20,7 +20,8 @@ class CreatePrivatePaymentsTable extends Migration
             $table->bigInteger('price');
             $table->bigInteger('discount')->default(0);
             $table->string('transaction_id');
-            $table->string('status')->default(0);
+            $table->integer('status')->default(0);
+            $table->enum('platform', ['web', 'app'])->default('web');
             $table->timestamps();
 
             $table->foreign('buyer_id')->references('id')->on('users')->onDelete('cascade');

@@ -10,9 +10,9 @@
                 <div class="">
                     <div class="page-title">
                         <div class="title_left">
-                            <h3>فایها
-                                <small>لیست تمام فایلهای ارسالی</small>
-                                {{$topics->count()}}
+                            <h3>حوزه کاری
+                                <small>لیست حوزه های کاری</small>
+                                {{$categories->count()}}
                             </h3>
                         </div>
 
@@ -39,24 +39,16 @@
 
                                     <div id="datatable-checkbox_wrapper"
                                          class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-                                        {{--<div class="row">
+                                        <div class="row">
                                             <div class="col-sm-6">
-                                                <div class="dataTables_length" id="datatable-checkbox_length"><label>نمایش
-                                                        <select name="datatable-checkbox_length"
-                                                                aria-controls="datatable-checkbox"
-                                                                class="form-control input-sm">
-                                                            <option value="10">10</option>
-                                                            <option value="25">25</option>
-                                                            <option value="50">50</option>
-                                                            <option value="100">100</option>
-                                                        </select> آیتم</label></div>
+
                                             </div>
                                             <div class="col-sm-6">
                                                 <div id="datatable-checkbox_filter" class="dataTables_filter">
---}}{{--                                                    <a href="{{route('product.create')}}" type="button" class="btn btn-round btn-primary">ایجاد محصول جدید +</a>--}}{{--
+                                                    <a href="{{route('category.create')}}" type="button" class="btn btn-round btn-primary">ایجاد حوزه کاری +</a>
                                                 </div>
                                             </div>
-                                        </div>--}}
+                                        </div>
                                         <div class="row">
                                             <div class="col-sm-12">
                                                 <table id="datatable-checkbox"
@@ -74,17 +66,7 @@
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
                                                             aria-label="نام: activate to sort column descending"
-                                                            style="width: 80px;">نام ارسال کننده
-                                                        </th>
-                                                        <th class="sorting" tabindex="0"
-                                                            aria-controls="datatable-checkbox" rowspan="1" colspan="1"
-                                                            aria-label="جایگاه: activate to sort column ascending"
-                                                            style="width: 65px;"> لینک فایل
-                                                        </th>
-                                                        <th class="sorting" tabindex="0"
-                                                            aria-controls="datatable-checkbox" rowspan="1" colspan="1"
-                                                            aria-label="جایگاه: activate to sort column ascending"
-                                                            style="width: 65px;"> وضعیت
+                                                            style="width: 280px;">نام حوزه کاری
                                                         </th>
                                                         <th class="sorting" tabindex="0"
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
@@ -97,32 +79,13 @@
 
                                                     <tbody>
 
-                                                        @foreach($topics as $topic)
+                                                        @foreach($categories as $category)
                                                             <tr role="row" class="odd">
-                                                                <td>{{$topic->id}}</td>
-                                                                <td>{{$topic->course->user->fullname}}</td>
-                                                                <td>
-                                                                    <a class="btn btn-default"
-                                                                       target="_blank"
-                                                                       href="{{asset('storage/'. $topic->file)}}">نمایش فایل</a>
-                                                                </td>
-                                                                <td>
-                                                                    @if($topic->approved === 1)
-                                                                        <span class="badge" style="background: green">تایید شده</span>
-                                                                    @elseif($topic->approved === 0)
-                                                                        <span class="badge badge-secondary">در انتظار تایید</span>
-                                                                    @else
-                                                                        <span class="badge badge-danger" style="background: red">رد شده</span>
-                                                                    @endif
-                                                                </td>
+                                                                <td>{{$category->id}}</td>
+                                                                <td>{{$category->name}}</td>
                                                                 <td>
                                                                     <div class = 'row text-center'>
-                                                                        @if($topic->approved === 0 || $topic->approved === 1)
-                                                                            <span onclick="approve({{$topic->id}}, 0)" class = 'fa fa-close operation-icon'></span>
-                                                                        @endif
-                                                                        @if($topic->approved === 0 || $topic->approved === 3)
-                                                                            <span onclick="approve({{$topic->id}})" class = 'fa fa-check operation-icon'></span>
-                                                                        @endif
+                                                                        <span onclick="removeCategory({{$category->id}})" class = 'fa fa-trash operation-icon'></span>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -134,7 +97,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-7">
-                                                    {{ $topics->links('vendor.pagination.default') }}
+                                                    {{ $categories->links('vendor.pagination.default') }}
                                             </div>
                                         </div>
                                     </div>
@@ -152,7 +115,7 @@
 @push('scripts')
 
     <script type="text/javascript">
-        function approve(id, approve = 1) {
+        function removeCategory(id, approve = 1) {
             Swal.fire({
                 title: 'آیا از انجام این عملیات اطمینان دارید؟',
                 showCancelButton: true,
@@ -162,8 +125,8 @@
                 preConfirm: (login) => {
                     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
-                    return fetch('{{url('admin/approve/file')}}/' + id, {
-                            method: 'POST',
+                    return fetch('{{url('admin/category')}}/' + id, {
+                            method: 'DELETE',
                             headers: {
                                 "Content-Type": "application/json",
                                 "Accept": "application/json",

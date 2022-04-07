@@ -26,7 +26,7 @@ class CourseResource extends JsonResource
             'price' => Utils::format_price($this->price()),
             'regular_price' => Utils::format_price($this->price),
             'has_discount' => $this->discount > 0,
-            'is_purchased' => !(Auth::user() === null) && Auth::user()->hasPurchasedCourse($this->id),
+            'is_purchased' => (!(Auth::user() === null) && Auth::user()->hasPurchasedCourse($this->id)) || $this->price() === 0,
         ];
     }
 }

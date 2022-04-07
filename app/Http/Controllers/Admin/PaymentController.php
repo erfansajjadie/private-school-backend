@@ -11,15 +11,19 @@ class PaymentController extends Controller
 {
     public function getCoursePayments()
     {
-        $payments = Payment::orderBy('id', 'desc')->paginate(10);
+        $payments = Payment::with(['user', 'course'])
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
-        return view('admin.payment.course-payments');
+        return view('admin.payment.course-payment', compact('payments'));
     }
 
     public function getPrivatePayments()
     {
-        $payments = PrivatePayment::orderBy('id', 'desc')->paginate(10);
+        $payments = PrivatePayment::with(['user', 'buyer'])
+            ->orderBy('id', 'desc')
+            ->paginate(10);
 
-        return view('admin.payment.private-payments');
+        return view('admin.payment.private-payment', compact('payments'));
     }
 }

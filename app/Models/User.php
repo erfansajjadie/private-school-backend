@@ -52,20 +52,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Followable, Buyer;
 
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'email',
-        'sheba',
-        'is_private',
-        'private_price',
-        'phone',
-        'phone_verified',
-        'profile_image',
-        'user_name',
-        'otp',
-        'category_id',
-    ];
+    protected $guarded = ['id'];
 
     protected $hidden = [
         'otp',
@@ -144,4 +131,18 @@ class User extends Authenticatable
             })->exists();
     }
 
+    public function ban(): void
+    {
+        $this->update(['is_banned' => 1]);
+    }
+
+    public function removeBan() : void
+    {
+        $this->update(['is_banned' => 0]);
+    }
+
+    public function toggleBan() : void
+    {
+        $this->is_banned === 1 ? $this->removeBan() : $this->ban();
+    }
 }

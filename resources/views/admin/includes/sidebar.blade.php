@@ -12,7 +12,7 @@
                 <img src="{{asset('images/img.jpg')}}" alt="..." class="img-circle profile_img">
             </div>
             <div class="profile_info">
-                <span>خوش آمدید,</span>
+                <span>خوش آمدید،</span>
                 <h2>{{auth()->guard('admin')->user()->name}}</h2>
             </div>
         </div>
@@ -23,31 +23,24 @@
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
-                <h3>عمومی</h3>
                 <ul class="nav side-menu">
-                    <li><a><i class="fa fa-home"></i> پیشخوان </a></li>
-                    <li><a><i class="fa fa-shopping-cart"></i> فروشگاه <span class="fa fa-chevron-down"></span></a>
+                    <li><a href="{{route('admin.dashboard')}}"><i class="fa fa-home"></i> پیشخوان </a></li>
+                    <li><a><i class="fa fa-users"></i> کاربران <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="{{route('product.index')}}">لیست محصولات</a></li>
-                            <li><a href="form_advanced.html">لیست دسته بندی ها</a></li>
-                            <li><a href="form_validation.html">لیست مشخصه ها</a></li>
+                            <li><a href="{{route('user.index')}}">لیست کاربران</a></li>
+                            <li><a href="{{route('message.index')}}">لیست پیام ها</a></li>
+                            <li><a href="{{route('file.index')}}">لیست فایل های ارسالی</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-dollar"></i> مالی و فروش <span
                                 class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="general_elements.html">لیست فروش ها</a></li>
-                            <li><a href="media_gallery.html">شیوه های ارسال</a></li>
-                            <li><a href="typography.html">شیوه های پرداخت</a></li>
-                            <li><a href="icons.html">کد های تخفیف</a></li>
+                            <li><a href="{{route('payments')}}">لیست فروش های دوره</a></li>
+                            <li><a href="{{route('private-payments')}}">لیست فروش های شخصی</a></li>
                         </ul>
                     </li>
-                    <li><a><i class="fa fa-users"></i> کاربران <span class="fa fa-chevron-down"></span></a>
-                        <ul class="nav child_menu">
-                            <li><a href="tables.html">لیست کاربران</a></li>
-                            <li><a href="tables_dynamic.html">لیست نظرات و امتیازات</a></li>
-                        </ul>
-                    </li>
+                    <li><a href="{{route('category.index')}}"><i class="fa fa-cogs"></i> حوزه های کاری </a></li>
+
                 </ul>
             </div>
 

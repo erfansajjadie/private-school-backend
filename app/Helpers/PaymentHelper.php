@@ -17,7 +17,7 @@ class PaymentHelper
 {
 
 
-    public static function invoice(Course $course) : string
+    public static function invoice(Course $course, $platform = 'app') : string
     {
         $invoice = (new Invoice)->amount($course->price());
 
@@ -32,10 +32,10 @@ class PaymentHelper
 
 
         try {
-            $link =  Payment::callbackUrl(env('APP_URL'). '/payment-complete')
+            $payment =  Payment::callbackUrl(env('APP_URL'). '/payment-complete')
                 ->purchase(
                 $invoice,
-                function ($driver, $transactionId) use ($course) {
+                function ($driver, $transactionId) use ($course, $platform) {
                     \App\Models\Payment::updateOrCreate([
                         'user_id' => Auth::user()->id,
                         'course_id' => $course->id,
@@ -45,12 +45,17 @@ class PaymentHelper
                         'owner_id' => $course->user->id,
                         'price' => $course->price(),
                         'discount' => $course->discount,
+                        'platform' => $platform,
                         'transaction_id' => $transactionId,
                     ]);
                 }
-            )->pay()->toJson();
+            )->pay();
 
-            return json_decode($link, true)['action'];
+            if($platform === "web") {
+                return  $payment->render();
+            }
+
+            return json_decode($payment->toJson(), true)['action'];
         } catch (\Exception $e) {
             return  $e;
         }
@@ -80,7 +85,7 @@ class PaymentHelper
     }
 
 
-    public static function invoicePrivate(User $user) : string
+    public static function invoicePrivate(User $user, $platform = 'app') : string
     {
         $invoice = (new Invoice)->amount((int) $user->private_price);
         $invoice->detail('wages', [
@@ -91,10 +96,10 @@ class PaymentHelper
             ]
         ]);
         try {
-            $link =  Payment::callbackUrl(env('APP_URL'). '/private-payment-complete')
+            $payment =  Payment::callbackUrl(env('APP_URL'). '/private-payment-complete')
                 ->purchase(
                     $invoice,
-                    function ($driver, $transactionId) use ($user) {
+                    function ($driver, $transactionId) use ($user, $platform) {
                         \App\Models\PrivatePayment::updateOrCreate([
                             'buyer_id' => Auth::user()->id,
                             'user_id' => $user->id,
@@ -102,12 +107,17 @@ class PaymentHelper
                             'buyer_id' => Auth::user()->id,
                             'user_id' => $user->id,
                             'price' => $user->private_price,
+                            'platform' => $platform,
                             'transaction_id' => $transactionId,
                         ]);
                     }
-                )->pay()->toJson();
+                )->pay();
 
-            return json_decode($link, true)['action'];
+            if($platform === "web") {
+                return  $payment->render();
+            }
+
+            return json_decode($payment->toJson(), true)['action'];
         } catch (\Exception $e) {
             return  $e;
         }

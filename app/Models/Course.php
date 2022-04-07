@@ -31,6 +31,10 @@ class Course extends Model
         return $this->price - $this->discount;
     }
 
+    public function discount_percent()
+    {
+        return ceil(100 - ((($this->price() / $this->price)) * 100));
+    }
 
     public function user()
     {

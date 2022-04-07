@@ -11,7 +11,7 @@
                     <div class="page-title">
                         <div class="title_left">
                             <h3>لیست خریدها
-                                <small>لیست خرید دوره ها</small>
+                                <small>لیست خرید اشتراک ها</small>
                                 {{$payments->count()}}
                             </h3>
                         </div>
@@ -74,12 +74,6 @@
                                                             aria-controls="datatable-checkbox" rowspan="1" colspan="1"
                                                             aria-sort="ascending"
                                                             aria-label="نام: activate to sort column descending"
-                                                            style="width: 50px;">دوره
-                                                        </th>
-                                                        <th class="sorting_asc" tabindex="0"
-                                                            aria-controls="datatable-checkbox" rowspan="1" colspan="1"
-                                                            aria-sort="ascending"
-                                                            aria-label="نام: activate to sort column descending"
                                                             style="width: 70px;">نام خریدار
                                                         </th>
                                                         <th class="sorting" tabindex="0"
@@ -111,15 +105,14 @@
                                                         @foreach($payments as $payment)
                                                             <tr role="row" class="odd">
                                                                 <td>{{$payment->transaction_id}}</td>
-                                                                <td>{{$payment->course->name}}</td>
                                                                 <td>{{$payment->user->user_name}}</td>
-                                                                <td>{{$payment->owner->user_name}}</td>
+                                                                <td>{{$payment->buyer->user_name}}</td>
                                                                 <td>{{\App\Helpers\Utils::format_price($payment->price)}}</td>
                                                                 <td>{{\App\Helpers\Utils::format_price($payment->discount)}}</td>
                                                                 <td>
-                                                                    @if($payment->status === "1")
+                                                                    @if($payment->status === 1)
                                                                         <span class="badge" style="background: green">{{$payment->status()}}</span>
-                                                                    @elseif($payment->status === "0")
+                                                                    @elseif($payment->status === 0)
                                                                         <span class="badge badge-secondary">{{$payment->status()}}</span>
                                                                     @else
                                                                         <span class="badge badge-danger" style="background: red">{{$payment->status()}}</span>

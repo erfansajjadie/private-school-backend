@@ -20,4 +20,19 @@ class CourseTopic extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function approve(): void
+    {
+        $this->update(['approved' =>  1]);
+    }
+
+    public function reject(): void
+    {
+        $this->update(['approved' =>  3]);
+    }
+
+    public function toggleApprove(): void
+    {
+        $this->approved === 1 ? $this->reject() : $this->approve();
+    }
 }
